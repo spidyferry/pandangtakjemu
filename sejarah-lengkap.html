@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kampung Tua Bakau Serip | Wisata Mangrove Batam</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        .hero-section {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('assets/img-produk/bg-utama.jpg');
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+        }
+
+        .nav-link {
+            position: relative;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background-color: #F9A826;
+            transition: width 0.3s;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .btn-primary {
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(249, 168, 38, 0.3);
+        }
+
+        .card {
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .panorama-container {
+            height: 500px;
+            background-color: #f1f1f1;
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+        }
+
+        .marketplace-item {
+            transition: all 0.3s ease;
+        }
+
+        .marketplace-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .category-tag {
+            transition: all 0.3s ease;
+        }
+
+        .category-tag:hover {
+            background-color: #F9A826;
+            color: white;
+        }
+
+        .floating-icons {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            z-index: 100;
+        }
+
+        .responsive-img {
+            width: 100%;
+            height: auto;
+            max-width: 600px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="bg-white shadow-md fixed w-full z-50 transition-all duration-300">
+        <div class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <div class="flex items-center">
+                <a href="#" class="text-xl font-bold text-green-800">
+                    <span class="text-yellow-500">Bakau</span>Serip
+                </a>
+            </div>
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="./index.html" class="nav-link text-gray-700 hover:text-yellow-500 transition-all">Beranda</a>
+                <a href="./index.html" class="nav-link text-gray-700 hover:text-yellow-500 transition-all">Tentang</a>
+                <a href="./berita.html" class="nav-link text-gray-700 hover:text-yellow-500 transition-all">Donasi</a>
+                <a href="./index.html" class="nav-link text-gray-700 hover:text-yellow-500 transition-all">Kontak</a>
+            </div>
+            <div class="md:hidden flex items-center">
+                <button class="text-gray-700 focus:outline-none">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+
+
+    <!-- About Section -->
+    <section id="about" class="w-full min-h-screen bg-gray-50 flex items-center justify-center px-10 py-16">
+        <div class="w-full">
+            <h2 class="text-4xl font-bold text-green-800 mb-6 text-center">
+                Mengenal Lebih Jauh <span class="text-yellow-500">Kampung Tua Bakau Serip</span>
+            </h2>
+            <div class="max-w-6xl mx-auto text-justify">
+                <p class="text-gray-700 mb-6 leading-relaxed">
+                    Desa Wisata Kampung Tua Bakau Serip merupakan salah satu permata tersembunyi di Pulau Batam yang
+                    terletak di kawasan Nongsa, Kepulauan Riau. Kawasan ini berada di dataran rendah yang mencakup area
+                    pesisir pantai serta hutan mangrove yang luas dan terjaga kelestariannya. Lokasinya sangat
+                    strategis, hanya sekitar 45 menit dari pusat Kota Batam, 10 menit dari Bandara Internasional Hang
+                    Nadim, dan sekitar 5 menit dari Pelabuhan Internasional Nongsapura. Kedekatan dengan berbagai akses
+                    transportasi utama menjadikan kampung ini sebagai destinasi wisata unggulan yang mudah dijangkau
+                    baik oleh wisatawan lokal maupun mancanegara.
+                </p>
+
+                <p class="text-gray-700 mb-6 leading-relaxed">
+                    Kampung Tua Bakau Serip dikenal dengan keasrian alamnya yang masih sangat terjaga. Hutan mangrove
+                    yang mengelilingi kawasan ini berfungsi sebagai pelindung alami dari abrasi pantai serta menjadi
+                    habitat bagi berbagai spesies flora dan fauna khas ekosistem pesisir. Wisatawan yang berkunjung
+                    dapat menikmati keindahan alam melalui jembatan kayu yang membentang di antara rimbunnya pohon
+                    bakau, menyaksikan berbagai jenis burung yang hinggap di ranting, serta menikmati semilir angin laut
+                    yang menenangkan pikiran. Tidak hanya sebagai tempat wisata, kawasan ini juga berperan penting dalam
+                    menjaga keseimbangan lingkungan dan menjadi sarana edukasi tentang pentingnya pelestarian mangrove
+                    bagi generasi muda.
+                </p>
+
+                <p class="text-gray-700 mb-6 leading-relaxed">
+                    Selain keindahan alamnya, Kampung Tua Bakau Serip juga menawarkan kekayaan budaya yang sangat
+                    menarik untuk dijelajahi. Penduduk setempat masih memegang teguh nilai-nilai tradisi leluhur yang
+                    diwariskan turun-temurun. Wisatawan dapat menyaksikan berbagai kegiatan budaya seperti seni tari
+                    Melayu, musik gambus, hingga ritual adat yang masih dijaga keasliannya. Masyarakat di sini hidup
+                    dengan penuh keramahan dan kebersamaan, mencerminkan nilai gotong royong yang menjadi ciri khas
+                    masyarakat pesisir.
+                </p>
+
+                <p class="text-gray-700 mb-6 leading-relaxed">
+                    Kuliner khas juga menjadi daya tarik tersendiri di Kampung Tua Bakau Serip. Beragam hidangan laut
+                    segar seperti ikan bakar, udang sambal petai, sotong hitam, dan olahan kepiting khas pesisir menjadi
+                    menu favorit para pengunjung. Selain itu, terdapat juga makanan tradisional seperti otak-otak,
+                    lempa, dan kue tradisional Melayu yang diolah dengan resep turun-temurun. Semua hidangan disajikan
+                    dengan cita rasa autentik, menghadirkan kelezatan yang menggugah selera sekaligus memperkenalkan
+                    kekayaan kuliner lokal kepada dunia luar.
+                </p>
+
+                <p class="text-gray-700 mb-6 leading-relaxed">
+                    Dalam beberapa tahun terakhir, pemerintah daerah bersama masyarakat setempat telah berkolaborasi
+                    untuk mengembangkan potensi wisata Kampung Tua Bakau Serip menjadi destinasi wisata berkelanjutan.
+                    Program ini tidak hanya berfokus pada peningkatan fasilitas wisata, tetapi juga pada pemberdayaan
+                    masyarakat lokal agar dapat turut berperan aktif dalam pengelolaan destinasi. Pelatihan pemandu
+                    wisata, pengelolaan homestay, serta promosi produk UMKM lokal menjadi bagian dari strategi
+                    pengembangan yang berorientasi pada kemandirian ekonomi masyarakat. Tujuannya adalah menciptakan
+                    keseimbangan antara pelestarian lingkungan, kelestarian budaya, dan peningkatan kesejahteraan warga.
+                </p>
+
+                <p class="text-gray-700 mb-8 leading-relaxed">
+                    Dengan segala potensi yang dimilikinya, Kampung Tua Bakau Serip bukan hanya sekadar destinasi wisata
+                    alam biasa, melainkan juga simbol harmoni antara manusia dan alam. Desa ini menjadi contoh nyata
+                    bagaimana pelestarian lingkungan dapat berjalan seiring dengan pengembangan ekonomi dan pariwisata.
+                    Keseimbangan antara nilai budaya, kelestarian alam, dan kemajuan teknologi menjadikan Kampung Tua
+                    Bakau Serip sebagai ikon baru wisata berkelanjutan di Batam yang patut dibanggakan dan dilestarikan
+                    bersama.
+                </p>
+
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Footer -->
+    <footer class="bg-green-900 text-white py-12">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h4 class="text-xl font-bold mb-4">Kampung Tua <span class="text-yellow-400">Bakau Serip</span></h4>
+                    <p class="text-green-200 mb-4">Harmoni kehidupan bakau dengan laut di tengah keindahan Mangrove,
+                        testimoni keberadaan Maha Kuasa.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-white hover:text-yellow-400">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="text-white hover:text-yellow-400">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-white hover:text-yellow-400">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                        <a href="#" class="text-white hover:text-yellow-400">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="text-xl font-bold mb-4">Link Cepat</h4>
+                    <ul class="space-y-2">
+                        <li><a href="./index.html" class="text-green-200 hover:text-yellow-400">Beranda</a></li>
+                        <li><a href="./index.html" class="text-green-200 hover:text-yellow-400">Tentang Kami</a></li>
+                        <li><a href="#attractions" class="text-green-200 hover:text-yellow-400">Wisata</a></li>
+                        <li><a href="#vrtour" class="text-green-200 hover:text-yellow-400">VR Tour</a></li>
+                        <li><a href="#marketplace" class="text-green-200 hover:text-yellow-400">Marketplace</a></li>
+                        <li><a href="./index.html" class="text-green-200 hover:text-yellow-400">Kontak</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-xl font-bold mb-4">Paket Wisata</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-green-200 hover:text-yellow-400">Paket Keluarga</a></li>
+                        <li><a href="#" class="text-green-200 hover:text-yellow-400">Paket Edukasi</a></li>
+                        <li><a href="#" class="text-green-200 hover:text-yellow-400">Paket Fotografi</a></li>
+                        <li><a href="#" class="text-green-200 hover:text-yellow-400">Paket Sunset</a></li>
+                        <li><a href="#" class="text-green-200 hover:text-yellow-400">Paket Kelompok</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-xl font-bold mb-4">Hubungi Kami</h4>
+                    <ul class="space-y-2">
+                        <li class="flex items-start">
+                            <i class="fas fa-map-marker-alt mt-1 mr-3 text-yellow-400"></i>
+                            <span class="text-green-200">Kampung Tua Bakau Serip, Kecamatan Nongsa, Kota Batam,
+                                Kepulauan Riau</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-phone mr-3 text-yellow-400"></i>
+                            <span class="text-green-200">+62 812 3456 7890</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-envelope mr-3 text-yellow-400"></i>
+                            <span class="text-green-200">info@bakauserip.id</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-green-700 mt-10 pt-6 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-green-200">&copy; 2025 Kampung Tua Bakau Serip. All Rights Reserved.</p>
+                <div class="flex space-x-6 mt-4 md:mt-0">
+                    <a href="#" class="text-green-200 hover:text-yellow-400">Kebijakan Privasi</a>
+                    <a href="#" class="text-green-200 hover:text-yellow-400">Syarat & Ketentuan</a>
+                    <a href="#" class="text-green-200 hover:text-yellow-400">FAQ</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating Icons -->
+    <!-- <div class="floating-icons flex flex-col space-y-3">
+        <a href="#" class="bg-green-600 hover:bg-green-700 text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg transition duration-300">
+            <i class="fab fa-whatsapp text-xl"></i>
+        </a>
+        <a href="#vrtour" class="bg-blue-600 hover:bg-blue-700 text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg transition duration-300">
+            <i class="fas fa-vr-cardboard text-xl"></i>
+        </a>
+        <a href="#" class="bg-yellow-500 hover:bg-yellow-600 text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg transition duration-300">
+            <i class="fas fa-shopping-cart text-xl"></i>
+        </a>
+        <a href="./index.html" class="bg-gray-700 hover:bg-gray-800 text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg transition duration-300">
+            <i class="fas fa-arrow-up text-xl"></i>
+        </a>
+    </div> -->
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <script>
+        // Sticky Navbar
+        $(window).scroll(function () {
+            if ($(this).scrollTop() > 50) {
+                $('nav').addClass('bg-white shadow-md py-2').removeClass('py-3');
+            } else {
+                $('nav').removeClass('bg-white shadow-md py-2').addClass('py-3');
+            }
+        });
+
+        // FAQ Accordion
+        $('button').click(function () {
+            $(this).next().slideToggle();
+            $(this).find('i').toggleClass('fa-chevron-down fa-chevron-up');
+        });
+
+        // Mobile Menu Toggle
+        $('.md\\:hidden button').click(function () {
+            $('.md\\:flex.items-center.space-x-8').toggleClass('hidden flex flex-col items-start space-y-4 absolute top-16 left-0 right-0 bg-white p-4 shadow-md');
+        });
+
+        // Smooth Scrolling
+        $('a[href^="#"]').on('click', function (e) {
+            e.preventDefault();
+            $('html, body').animate({
+                scrollTop: $($(this).attr('href')).offset().top - 70
+            }, 500);
+        });
+    </script>
+</body>
+
+</html>

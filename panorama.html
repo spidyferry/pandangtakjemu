@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bakau Serip - Virtual Tour 360°</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Pannellum CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pannellum/2.5.6/pannellum.css">
+    <style>
+        :root {
+            --primary-color: #2A9D8F;
+            --secondary-color: #E9C46A;
+            --accent-color: #F4A261;
+            --dark-color: #264653;
+            --light-color: #E5F5F2;
+            --white: #ffffff;
+        }
+    
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+    
+        body {
+            overflow: hidden;
+            background-color: var(--dark-color);
+        }
+    
+        .panorama-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+    
+        #panorama {
+            width: 100%;
+            height: 100%;
+        }
+    
+        .sidebar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 300px;
+            background: rgba(38, 70, 83, 0.85);
+            backdrop-filter: blur(10px);
+            color: var(--white);
+            padding: 20px;
+            transition: transform 0.3s ease;
+            overflow-y: auto;
+            z-index: 100;
+            max-height: 100vh;
+        }
+    
+        .sidebar-closed {
+            transform: translateX(-270px);
+        }
+    
+        .sidebar-toggle {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            width: 30px;
+            height: 30px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            color: var(--white);
+            border: none;
+            font-size: 16px;
+            z-index: 101;
+        }
+    
+        .logo-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-top: 10px;
+        }
+    
+        .logo {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 10px;
+            background-color: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+    
+        .logo img {
+            width: 100%;
+            height: auto;
+        }
+    
+        .logo-text {
+            font-weight: 700;
+            font-size: 24px;
+            text-align: center;
+            color: var(--white);
+        }
+    
+        .nav-menu {
+            list-style: none;
+            padding: 0;
+            margin-top: 20px;
+        }
+    
+        .nav-item {
+            margin-bottom: 10px;
+        }
+    
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            color: var(--white);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+    
+        .nav-link:hover,
+        .nav-link.active {
+            background-color: var(--primary-color);
+        }
+    
+        .nav-link i {
+            margin-right: 10px;
+            font-size: 18px;
+        }
+    
+        .back-button {
+            display: flex;
+            align-items: center;
+            margin-top: 30px;
+            padding: 12px 15px;
+            color: var(--white);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            background-color: var(--dark-color);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+        }
+    
+        .back-button:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+    
+        .back-button i {
+            margin-right: 10px;
+        }
+    
+        .location-header {
+            position: absolute;
+            top: 20px;
+            left: 320px;
+            right: 20px;
+            background-color: rgba(38, 70, 83, 0.8);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: left 0.3s ease;
+            z-index: 10;
+        }
+    
+        .sidebar-closed + .location-header {
+            left: 50px;
+        }
+    
+        .location-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+    
+        .location-subtitle {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+    
+        .location-info {
+            flex: 1;
+        }
+    
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+    
+        .action-button {
+            padding: 8px 15px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: background-color 0.3s ease;
+        }
+    
+        .action-button:hover {
+            background-color: var(--secondary-color);
+        }
+    
+        .custom-hotspot {
+            background-color: var(--accent-color);
+            color: #fff;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            animation: pulse 2s infinite;
+        }
+    
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(244, 162, 97, 0.7);
+            }
+    
+            70% {
+                box-shadow: 0 0 0 10px rgba(244, 162, 97, 0);
+            }
+    
+            100% {
+                box-shadow: 0 0 0 0 rgba(244, 162, 97, 0);
+            }
+        }
+    
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--dark-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+            transition: opacity 0.5s ease;
+        }
+    
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 1s ease-in-out infinite;
+        }
+    
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    
+        .hotspot-tooltip {
+            position: absolute;
+            background-color: rgba(38, 70, 83, 0.9);
+            color: #fff;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 14px;
+            max-width: 200px;
+            z-index: 5;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+    
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 260px;
+            }
+    
+            .sidebar-closed {
+                transform: translateX(-100%);
+            }
+    
+            .sidebar-toggle {
+                right: -15px;
+                top: 15px;
+                width: 35px;
+                height: 35px;
+            }
+    
+            .location-header {
+                left: 20px !important;
+                right: 20px;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+    
+            .action-buttons {
+                margin-top: 10px;
+                flex-wrap: wrap;
+            }
+    
+            .panorama-container {
+                height: auto;
+                min-height: 100vh;
+            }
+        }
+    </style>
+    
+</head>
+<body>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <div class="panorama-container">
+        <div id="panorama"></div>
+        
+        <div class="sidebar">
+            <button class="sidebar-toggle" id="sidebarToggle">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+            
+            <div class="logo-container">
+                <div class="logo">
+                    <img src="assets/img/img-logo.png" alt="Bakau Serip Logo">
+                </div>
+                <div class="logo-text">BAKAU SERIP</div>
+            </div>
+            
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="#" class="nav-link active" data-scene="scene1">
+                        <i class="fas fa-home"></i>
+                        <span>Beranda</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-scene="scene2">
+                        <i class="fas fa-house-user"></i>
+                        <span>Perkampungan</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-scene="scene3">
+                        <i class="fas fa-tree"></i>
+                        <span>Wisata Bakau Serip</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-scene="scene4">
+                        <i class="fas fa-map-marked-alt"></i>
+                        <span>Padang Tak Jemu</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-sun"></i>
+                        <span>Sunset</span>
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-bed"></i>
+                        <span>Penginapan</span>
+                    </a>
+                </li>
+            </ul>
+            
+            <a href="index.html" class="back-button">
+                <i class="fas fa-arrow-left"></i>
+                <span>Kembali</span>
+            </a>
+        </div>
+        
+        <div class="location-header">
+            <div class="location-info">
+                <div class="location-title" id="sceneTitle">Desa Wisata Kampung Tua Bakau Serip</div>
+                <div class="location-subtitle" id="sceneSubtitle">Wisata Ekowisata Mangrove & Budaya Tradisional</div>
+            </div>
+            <div class="action-buttons">
+                <button class="action-button" id="infoButton">
+                    <i class="fas fa-info-circle"></i>
+                    <span>Info</span>
+                </button>
+                <button class="action-button" id="mapButton">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>Lokasi</span>
+                </button>
+            </div>
+        </div>
+        
+        <div class="hotspot-tooltip" id="tooltip"></div>
+    </div>
+
+    <!-- Pannellum JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pannellum/2.5.6/pannellum.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebar = document.querySelector('.sidebar');
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            const tooltip = document.getElementById('tooltip');
+            const sceneTitle = document.getElementById('sceneTitle');
+            const sceneSubtitle = document.getElementById('sceneSubtitle');
+            
+            // Define sample equirectangular image for testing
+            // This is a valid equirectangular sample image from Pannellum's examples
+            const SAMPLE_EQUIRECTANGULAR = "https://pannellum.org/images/alma.jpg";
+            
+            // Define scenes configuration
+            const scenes = {
+                scene1: {
+                    title: "Desa Wisata Kampung Tua Bakau Serip",
+                    subtitle: "Wisata Ekowisata Mangrove & Budaya Tradisional",
+                    // Menggunakan gambar equirectangular sample yang valid
+                    imageSource: SAMPLE_EQUIRECTANGULAR,
+                    hotSpots: [
+                        {
+                            pitch: -5,
+                            yaw: 30,
+                            type: "custom",
+                            cssClass: "custom-hotspot",
+                            text: "Perkampungan Tua Bakau Serip",
+                            id: "spot1",
+                            createTooltipFunc: hotspotTooltip,
+                            createTooltipArgs: "Perkampungan Tua Bakau Serip",
+                            sceneId: "scene2"
+                        },
+                        {
+                            pitch: 0,
+                            yaw: 110,
+                            type: "custom",
+                            cssClass: "custom-hotspot",
+                            text: "Padang Tak Jemu Eko Wisata Mangrove",
+                            id: "spot2",
+                            createTooltipFunc: hotspotTooltip,
+                            createTooltipArgs: "Padang Tak Jemu Eko Wisata Mangrove",
+                            sceneId: "scene4"
+                        }
+                    ]
+                },
+                scene2: {
+                    title: "Perkampungan Tua Bakau Serip",
+                    subtitle: "Rumah Tradisional & Kehidupan Masyarakat",
+                    imageSource: SAMPLE_EQUIRECTANGULAR,
+                    hotSpots: [
+                        {
+                            pitch: -10,
+                            yaw: -140,
+                            type: "custom",
+                            cssClass: "custom-hotspot",
+                            text: "Kembali ke Beranda",
+                            id: "spot3",
+                            createTooltipFunc: hotspotTooltip,
+                            createTooltipArgs: "Kembali ke Beranda",
+                            sceneId: "scene1"
+                        },
+                        {
+                            pitch: -5,
+                            yaw: 70,
+                            type: "custom",
+                            cssClass: "custom-hotspot",
+                            text: "Menuju Wisata Bakau",
+                            id: "spot4",
+                            createTooltipFunc: hotspotTooltip,
+                            createTooltipArgs: "Menuju Wisata Bakau",
+                            sceneId: "scene3"
+                        }
+                    ]
+                },
+                scene3: {
+                    title: "Wisata Bakau Serip",
+                    subtitle: "Hutan Mangrove & Keanekaragaman Hayati",
+                    imageSource: SAMPLE_EQUIRECTANGULAR,
+                    hotSpots: [
+                        {
+                            pitch: 0,
+                            yaw: -90,
+                            type: "custom",
+                            cssClass: "custom-hotspot",
+                            text: "Kembali ke Perkampungan",
+                            id: "spot5",
+                            createTooltipFunc: hotspotTooltip,
+                            createTooltipArgs: "Kembali ke Perkampungan",
+                            sceneId: "scene2"
+                        },
+                        {
+                            pitch: 0,
+                            yaw: 90,
+                            type: "custom",
+                            cssClass: "custom-hotspot",
+                            text: "Menuju Padang Tak Jemu",
+                            id: "spot6",
+                            createTooltipFunc: hotspotTooltip,
+                            createTooltipArgs: "Menuju Padang Tak Jemu",
+                            sceneId: "scene4"
+                        }
+                    ]
+                },
+                scene4: {
+                    title: "Padang Tak Jemu Eko Wisata Mangrove",
+                    subtitle: "Area Konservasi & Edukasi Mangrove",
+                    imageSource: SAMPLE_EQUIRECTANGULAR,
+                    hotSpots: [
+                        {
+                            pitch: 0,
+                            yaw: -120,
+                            type: "custom",
+                            cssClass: "custom-hotspot",
+                            text: "Kembali ke Beranda",
+                            id: "spot7",
+                            createTooltipFunc: hotspotTooltip,
+                            createTooltipArgs: "Kembali ke Beranda",
+                            sceneId: "scene1"
+                        }
+                    ]
+                }
+            };
+            
+            // Fungsi untuk menangani error pada pannellum
+            function handlePanoramaError() {
+                console.error("Error loading panorama");
+                loadingOverlay.innerHTML = `
+                    <div style="text-align: center; color: white; max-width: 80%;">
+                        <h2>Terjadi kesalahan saat memuat 360</h2>
+                        <p style="margin-top: 20px;">Kemungkinan penyebab:</p>
+                        <ul style="text-align: left; margin-top: 10px;">
+                            <li>Gambar panorama 360° tidak dapat diakses</li>
+                            <li>Masalah koneksi internet</li>
+                        </ul>
+                        <button onclick="location.reload()" style="
+                            margin-top: 20px;
+                            padding: 10px 20px;
+                            background: #2A9D8F;
+                            border: none;
+                            color: white;
+                            border-radius: 5px;
+                            cursor: pointer;
+                        ">Muat Ulang Halaman</button>
+                    </div>
+                `;
+                
+                // Tampilkan fallback UI sederhana
+                document.getElementById('panorama').innerHTML = `
+                    <div style="
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        justify-content: center;
+                        height: 100%;
+                        background-color: #264653;
+                        color: white;
+                        text-align: center;
+                        padding: 20px;
+                    ">
+                        <h2>Bakau Serip - Virtual Tour 360°</h2>
+                        <p style="margin-top: 10px;">Konten panorama 360° tidak dapat dimuat</p>
+                        <div style="
+                            margin-top: 20px;
+                            display: grid;
+                            grid-template-columns: repeat(2, 1fr);
+                            gap: 20px;
+                            width: 80%;
+                            max-width: 800px;
+                        ">
+                            <div style="
+                                background-color: rgba(255, 255, 255, 0.1);
+                                padding: 20px;
+                                border-radius: 10px;
+                                text-align: center;
+                            ">
+                                <h3>Perkampungan Tua</h3>
+                                <p>Lihat kehidupan tradisional masyarakat Bakau Serip</p>
+                            </div>
+                            <div style="
+                                background-color: rgba(255, 255, 255, 0.1);
+                                padding: 20px;
+                                border-radius: 10px;
+                                text-align: center;
+                            ">
+                                <h3>Wisata Mangrove</h3>
+                                <p>Jelajahi keindahan hutan mangrove yang menakjubkan</p>
+                            </div>
+                            <div style="
+                                background-color: rgba(255, 255, 255, 0.1);
+                                padding: 20px;
+                                border-radius: 10px;
+                                text-align: center;
+                            ">
+                                <h3>Padang Tak Jemu</h3>
+                                <p>Area konservasi mangrove dengan pemandangan indah</p>
+                            </div>
+                            <div style="
+                                background-color: rgba(255, 255, 255, 0.1);
+                                padding: 20px;
+                                border-radius: 10px;
+                                text-align: center;
+                            ">
+                                <h3>Matahari terbenam</h3>
+                                <p>Nikmati keindahan matahari terbenam di 3 negara</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            // Timeout untuk mendeteksi loading terlalu lama
+            let loadingTimeout = setTimeout(() => {
+                if (document.querySelector('.pnlm-load-box').style.display !== 'none') {
+                    handlePanoramaError();
+                }
+            }, 10000); // 10 detik timeout
+            
+            // Initialize pannellum viewer with error handling
+            let viewer;
+            try {
+                viewer = pannellum.viewer('panorama', {
+                    default: {
+                        firstScene: 'scene1',
+                        sceneFadeDuration: 1000,
+                        autoLoad: true,
+                        compass: true,
+                        showFullscreenCtrl: false
+                    },
+                    scenes: {
+                        scene1: {
+                            title: scenes.scene1.title,
+                            type: "equirectangular",
+                            panorama: scenes.scene1.imageSource,
+                            hotSpots: scenes.scene1.hotSpots,
+                            yaw: 0,
+                            pitch: 0,
+                            hfov: 110
+                        }
+                    }
+                });
+                
+                // Error handler
+                viewer.on('error', function(errorMsg) {
+                    console.error("Pannellum error:", errorMsg);
+                    clearTimeout(loadingTimeout);
+                    handlePanoramaError();
+                });
+                
+                // Success handler
+                viewer.on('load', function() {
+                    clearTimeout(loadingTimeout);
+                    loadingOverlay.style.opacity = 0;
+                    setTimeout(() => {
+                        loadingOverlay.style.display = 'none';
+                    }, 500);
+                });
+            } catch (e) {
+                console.error("Error initializing Pannellum:", e);
+                clearTimeout(loadingTimeout);
+                handlePanoramaError();
+            }
+            
+            // Function to load a new scene
+            function loadScene(sceneId) {
+                // Show loading overlay
+                loadingOverlay.style.opacity = 1;
+                loadingOverlay.style.display = 'flex';
+                
+                try {
+                    // Destroy previous viewer to prevent memory leaks
+                    if (viewer) {
+                        viewer.destroy();
+                    }
+                    
+                    // Get scene config
+                    const sceneConfig = scenes[sceneId];
+                    
+                    // Update header info
+                    sceneTitle.textContent = sceneConfig.title;
+                    sceneSubtitle.textContent = sceneConfig.subtitle;
+                    
+                    // Set new loading timeout
+                    clearTimeout(loadingTimeout);
+                    loadingTimeout = setTimeout(() => {
+                        if (document.querySelector('.pnlm-load-box')?.style.display !== 'none') {
+                            handlePanoramaError();
+                        }
+                    }, 10000);
+                    
+                    // Create a new config for the viewer
+                    const viewerConfig = {
+                        default: {
+                            firstScene: sceneId,
+                            sceneFadeDuration: 1000,
+                            autoLoad: true,
+                            compass: true,
+                            showFullscreenCtrl: false
+                        },
+                        scenes: {}
+                    };
+                    
+                    // Add the scene to the config
+                    viewerConfig.scenes[sceneId] = {
+                        title: sceneConfig.title,
+                        type: "equirectangular",
+                        panorama: sceneConfig.imageSource,
+                        hotSpots: sceneConfig.hotSpots,
+                        yaw: 0,
+                        pitch: 0,
+                        hfov: 110
+                    };
+                    
+                    // Create new viewer with the scene
+                    viewer = pannellum.viewer('panorama', viewerConfig);
+                    
+                    // Error handler
+                    viewer.on('error', function(errorMsg) {
+                        console.error("Pannellum error:", errorMsg);
+                        clearTimeout(loadingTimeout);
+                        handlePanoramaError();
+                    });
+                    
+                    // Hide loading overlay when scene is loaded
+                    viewer.on('load', function() {
+                        clearTimeout(loadingTimeout);
+                        loadingOverlay.style.opacity = 0;
+                        setTimeout(() => {
+                            loadingOverlay.style.display = 'none';
+                        }, 500);
+                    });
+                    
+                    // Set up hotspot click handlers
+                    viewer.on('click', function(e) {
+                        if (e.target.classList.contains('custom-hotspot')) {
+                            // Find the hotspot that was clicked
+                            const hotspotId = e.target.parentElement.id;
+                            const sceneConfig = scenes[sceneId];
+                            
+                            // Find the corresponding hotspot config
+                            const hotspot = sceneConfig.hotSpots.find(h => h.id === hotspotId);
+                            
+                            if (hotspot && hotspot.sceneId) {
+                                // Load the new scene
+                                loadScene(hotspot.sceneId);
+                                
+                                // Update active nav link
+                                document.querySelectorAll('.nav-link').forEach(link => {
+                                    link.classList.remove('active');
+                                    if (link.dataset.scene === hotspot.sceneId) {
+                                        link.classList.add('active');
+                                    }
+                                });
+                            }
+                        }
+                    });
+                } catch (e) {
+                    console.error("Error loading scene:", e);
+                    clearTimeout(loadingTimeout);
+                    handlePanoramaError();
+                }
+            }
+            
+            // Custom hotspot function
+            function hotspotTooltip(hotSpotDiv, args) {
+                hotSpotDiv.classList.add('custom-hotspot');
+                const span = document.createElement('span');
+                span.innerHTML = '<i class="fas fa-map-marker-alt"></i>';
+                hotSpotDiv.appendChild(span);
+                
+                hotSpotDiv.addEventListener('mouseenter', function() {
+                    tooltip.innerHTML = args;
+                    tooltip.style.opacity = 1;
+                    
+                    // Position the tooltip near the hotspot
+                    const rect = hotSpotDiv.getBoundingClientRect();
+                    tooltip.style.left = (rect.left + rect.width / 2 - tooltip.offsetWidth / 2) + 'px';
+                    tooltip.style.top = (rect.top - tooltip.offsetHeight - 10) + 'px';
+                });
+                
+                hotSpotDiv.addEventListener('mouseleave', function() {
+                    tooltip.style.opacity = 0;
+                });
+            }
+            
+            // Sidebar toggle
+            sidebarToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('sidebar-closed');
+                
+                // Update icon
+                const icon = sidebarToggle.querySelector('i');
+                if (sidebar.classList.contains('sidebar-closed')) {
+                    icon.classList.remove('fa-chevron-left');
+                    icon.classList.add('fa-chevron-right');
+                } else {
+                    icon.classList.remove('fa-chevron-right');
+                    icon.classList.add('fa-chevron-left');
+                }
+            });
+            
+            // Navigation links
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    document.querySelectorAll('.nav-link').forEach(item => {
+                        item.classList.remove('active');
+                    });
+                    
+                    this.classList.add('active');
+                    
+                    const sceneId = this.dataset.scene;
+                    if (sceneId) {
+                        loadScene(sceneId);
+                    }
+                });
+            });
+            
+            // Set up info button
+            document.getElementById('infoButton').addEventListener('click', function() {
+                alert('Informasi tentang ' + sceneTitle.textContent + '\n\nSilakan tambahkan deskripsi lokasi di sini.');
+            });
+            
+            // Set up map button
+            document.getElementById('mapButton').addEventListener('click', function() {
+                alert('Peta lokasi ' + sceneTitle.textContent + '\n\nSilakan tambahkan koordinat atau link ke Google Maps di sini.');
+            });
+        });
+    </script>
+</body>
+</html>

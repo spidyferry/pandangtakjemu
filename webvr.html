@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cara Pakai WebVR di Oculus</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+
+            .demo-buttons {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .enter-vr-btn {
+                min-width: auto;
+                margin-bottom: 10px;
+            }
+
+            .demo-btn,
+            .test-btn {
+                justify-content: center;
+            }
+
+            .demo-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .demo-icon {
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #2d5a27 0%, #4a7c59 50%, #52b788 100%);
+            min-height: 100vh;
+            padding: 0;
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 100%;
+            min-height: 100vh;
+            margin: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 0;
+            box-shadow: none;
+            overflow-x: hidden;
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2d5a27 0%, #40916c 50%, #52b788 100%);
+            color: white;
+            padding: 60px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: repeating-linear-gradient(45deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(255, 255, 255, 0.1) 2px,
+                    rgba(255, 255, 255, 0.1) 4px);
+            animation: float 20s linear infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateX(-50px) translateY(-50px);
+            }
+
+            100% {
+                transform: translateX(50px) translateY(50px);
+            }
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header .subtitle {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .content {
+            padding: 50px 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .step {
+            background: white;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .step:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        .step:nth-child(odd) {
+            border-left-color: #40916c;
+        }
+
+        .step:nth-child(even) {
+            border-left-color: #52b788;
+        }
+
+        .step-header {
+            background: linear-gradient(135deg, #f1f8e9 0%, #e8f5e8 100%);
+            padding: 25px 30px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .step-header:hover {
+            background: linear-gradient(135deg, #e8f5e8 0%, #dcedc8 100%);
+        }
+
+        .step-number {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #2d5a27 0%, #40916c 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-right: 25px;
+            box-shadow: 0 6px 20px rgba(45, 90, 39, 0.3);
+        }
+
+        .step-title {
+            flex: 1;
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #1b4332;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .step-icon {
+            font-size: 1.5rem;
+            color: #40916c;
+        }
+
+        .step-content {
+            padding: 0 30px 30px 105px;
+            color: #2d5a27;
+            line-height: 1.8;
+            font-size: 1.1rem;
+        }
+
+        .step-content code {
+            background: #f1f8e9;
+            padding: 4px 12px;
+            border-radius: 8px;
+            font-family: 'Fira Code', monospace;
+            color: #1b4332;
+            border: 2px solid #c7f9cc;
+            font-weight: 600;
+        }
+
+        .tips-section {
+            background: linear-gradient(135deg, #a3e635 0%, #65a30d 100%);
+            border-radius: 20px;
+            padding: 30px;
+            margin-top: 40px;
+            box-shadow: 0 10px 30px rgba(163, 230, 53, 0.2);
+        }
+
+        .tips-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .tips-icon {
+            background: rgba(255, 255, 255, 0.25);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 20px;
+            font-size: 1.8rem;
+            color: #1a2e05;
+            backdrop-filter: blur(10px);
+        }
+
+        .tips-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #1a2e05;
+        }
+
+        .tips-list {
+            list-style: none;
+        }
+
+        .tips-list li {
+            background: rgba(255, 255, 255, 0.4);
+            margin-bottom: 12px;
+            padding: 18px;
+            border-radius: 12px;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .tips-list li::before {
+            content: '🌿';
+            font-size: 1.4rem;
+            flex-shrink: 0;
+        }
+
+        .vr-action-section {
+            margin: 40px 0;
+        }
+
+        .vr-demo-card {
+            background: linear-gradient(135deg, #2d5a27 0%, #40916c 100%);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 20px 50px rgba(45, 90, 39, 0.3);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .vr-demo-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(82, 183, 136, 0.2) 0%, transparent 70%);
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(0.8) rotate(0deg);
+                opacity: 0.5;
+            }
+
+            50% {
+                transform: scale(1.2) rotate(180deg);
+                opacity: 0.8;
+            }
+        }
+
+        .demo-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .demo-icon {
+            background: rgba(255, 255, 255, 0.2);
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 25px;
+            font-size: 2rem;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .demo-header h3 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .demo-header p {
+            opacity: 0.9;
+            font-size: 1.2rem;
+        }
+
+        .demo-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .enter-vr-btn {
+            background: linear-gradient(135deg, #16a085 0%, #27ae60 100%);
+            color: white;
+            border: none;
+            padding: 18px 35px;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(22, 160, 133, 0.4);
+            position: relative;
+            overflow: hidden;
+            flex: 1;
+            justify-content: center;
+            min-width: 220px;
+        }
+
+        .enter-vr-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 40px rgba(22, 160, 133, 0.5);
+        }
+
+        .btn-glow {
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% {
+                left: -100%;
+            }
+
+            100% {
+                left: 100%;
+            }
+        }
+
+        .demo-btn,
+        .test-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 12px 20px;
+            border-radius: 15px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .demo-btn:hover,
+        .test-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .compatibility-status {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            z-index: 1;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+
+        .status-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .status-item i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .status-supported {
+            color: #4ade80;
+        }
+
+        .status-not-supported {
+            color: #f87171;
+        }
+
+        .status-warning {
+            color: #fbbf24;
+        }
+
+        .footer {
+            background: #2d3748;
+            color: #cbd5e0;
+            padding: 20px 30px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .toggle-icon {
+            margin-left: auto;
+            transition: transform 0.3s ease;
+            color: #40916c;
+        }
+
+        .step.expanded .toggle-icon {
+            transform: rotate(180deg);
+        }
+
+        .step-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+        }
+
+        .step.expanded .step-content {
+            max-height: 500px;
+            padding: 0 30px 30px 105px;
+        }
+
+        .footer {
+            background: #1b4332;
+            color: #a7f3d0;
+            padding: 25px 40px;
+            text-align: center;
+            font-size: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .header {
+                padding: 30px 20px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .content {
+                padding: 30px 20px;
+            }
+
+            .step-header {
+                padding: 15px 20px;
+            }
+
+            .step-number {
+                width: 35px;
+                height: 35px;
+                margin-right: 15px;
+            }
+
+            .step-title {
+                font-size: 1.1rem;
+            }
+
+            .step.expanded .step-content {
+                padding: 0 20px 20px 70px;
+            }
+
+            .tips-section {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .step.expanded .step-content {
+                padding: 0 15px 15px 15px;
+            }
+
+            .step-number {
+                width: 30px;
+                height: 30px;
+                margin-right: 10px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-vr-cardboard"></i> Cara Pakai WebVR di Oculus</h1>
+            <p class="subtitle">Panduan lengkap menggunakan WebVR dengan headset Oculus Anda</p>
+        </div>
+
+        <div class="content">
+            <div class="step expanded">
+                <div class="step-header" onclick="toggleStep(this)">
+                    <div class="step-number">1</div>
+                    <div class="step-title">
+                        <i class="fas fa-power-off step-icon"></i>
+                        Nyalakan Oculus
+                        <i class="fas fa-chevron-down toggle-icon"></i>
+                    </div>
+                </div>
+                <div class="step-content">
+                    Tekan tombol <code>power</code> di headset sampai layar menyala. Jika minta PIN, masukkan PIN yang
+                    bisa dipaksa.
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-header" onclick="toggleStep(this)">
+                    <div class="step-number">2</div>
+                    <div class="step-title">
+                        <i class="fas fa-battery-three-quarters step-icon"></i>
+                        Pastikan Baterai Cukup
+                        <i class="fas fa-chevron-down toggle-icon"></i>
+                    </div>
+                </div>
+                <div class="step-content">
+                    Jika ikon baterai merah, colok charger dulu. Tunggu sedikit sampai indikator baterai tidak merah
+                    lagi (≥30 menit kalau kosong).
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-header" onclick="toggleStep(this)">
+                    <div class="step-number">3</div>
+                    <div class="step-title">
+                        <i class="fas fa-wifi step-icon"></i>
+                        Hubungkan ke Wi-Fi
+                        <i class="fas fa-chevron-down toggle-icon"></i>
+                    </div>
+                </div>
+                <div class="step-content">
+                    Gunakan controller → buka <code>Settings</code> → pilih <code>Wi-Fi</code> → pilih Wi-Fi rumah →
+                    masukkan password.
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-header" onclick="toggleStep(this)">
+                    <div class="step-number">4</div>
+                    <div class="step-title">
+                        <i class="fas fa-globe step-icon"></i>
+                        Buka Aplikasi Browser di Oculus
+                        <i class="fas fa-chevron-down toggle-icon"></i>
+                    </div>
+                </div>
+                <div class="step-content">
+                    Cari aplikasi <code>Browser</code> (ikon bola dunia). Buka, lalu ketik atau tempel alamat website VR
+                    yang diberikan (contoh: <code>https://vr.pandangtakjemu.com</code>).
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-header" onclick="toggleStep(this)">
+                    <div class="step-number">5</div>
+                    <div class="step-title">
+                        <i class="fas fa-play step-icon"></i>
+                        Tekan "Enter VR" di Halaman
+                        <i class="fas fa-chevron-down toggle-icon"></i>
+                    </div>
+                </div>
+                <div class="step-content">
+                    Di halaman web cari tombol <code>Enter VR</code> atau ikon kacamata. Arahkan laser controller ke
+                    tombol itu dan tekan trigger.
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-header" onclick="toggleStep(this)">
+                    <div class="step-number">6</div>
+                    <div class="step-title">
+                        <i class="fas fa-user-shield step-icon"></i>
+                        Menjelajahi dengan Aman
+                        <i class="fas fa-chevron-down toggle-icon"></i>
+                    </div>
+                </div>
+                <div class="step-content">
+                    Duduk yang nyaman, pandang ke kiri/kanan/atas/bawah untuk melihat. Gerak kepala pelan-pelan supaya
+                    tidak pusing.
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-header" onclick="toggleStep(this)">
+                    <div class="step-number">7</div>
+                    <div class="step-title">
+                        <i class="fas fa-sign-out-alt step-icon"></i>
+                        Keluar dari Mode VR
+                        <i class="fas fa-chevron-down toggle-icon"></i>
+                    </div>
+                </div>
+                <div class="step-content">
+                    Tekan tombol <code>Oculus/Menu</code> pada controller kanan lalu pilih <code>Exit VR</code> atau
+                    tombol kembali.
+                </div>
+            </div>
+
+            <div class="tips-section">
+                <div class="tips-header">
+                    <div class="tips-icon">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <div class="tips-title">Tips Singkat</div>
+                </div>
+                <ul class="tips-list">
+                    <li>Kalau pusing, lepaskan headset, tarik napas, istirahat 5 menit.</li>
+                    <li>Kalau gambar buram, sesuaikan posisi headset di kepala sampai jelas.</li>
+                    <li>Minta bantuan orang terdekat kalau kesulitan—jangan ragu minta tolong 😊</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="vr-action-section">
+            <div class="vr-demo-card">
+                <div class="demo-header">
+                    <div class="demo-icon">
+                        <i class="fas fa-vr-cardboard"></i>
+                    </div>
+                    <div>
+                        <h3>Siap Mencoba VR?</h3>
+                        <p>Klik tombol di bawah untuk memulai pengalaman WebVR</p>
+                    </div>
+                </div>
+
+                <div class="demo-buttons">
+                    <button class="enter-vr-btn" onclick="window.location.href='https://vr.pandangtakjemu.com'">
+                        <i class="fas fa-play-circle"></i>
+                        <span>Mulai WebVR</span>
+                        <div class="btn-glow"></div>
+                    </button>
+                </div>
+
+
+                <div class="compatibility-status" id="compatibilityStatus" style="display: none;">
+                    <div class="status-item">
+                        <i class="fas fa-mobile-alt"></i>
+                        <span>Device: <span id="deviceInfo">Checking...</span></span>
+                    </div>
+                    <div class="status-item">
+                        <i class="fas fa-globe"></i>
+                        <span>WebXR: <span id="webxrSupport">Checking...</span></span>
+                    </div>
+                    <div class="status-item">
+                        <i class="fas fa-wifi"></i>
+                        <span>Connection: <span id="connectionStatus">Checking...</span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Catatan: arogolo di atas umum untuk WebVR. Jika halaman buruh ≥0 akses kamera / motion, pilih Allow jika
+                muncul pop-up.</p>
+        </div>
+    </div>
+
+    <script>
+        function toggleStep(header) {
+            const step = header.parentElement;
+            const isExpanded = step.classList.contains('expanded');
+
+            // Close all other steps
+            document.querySelectorAll('.step.expanded').forEach(s => {
+                if (s !== step) {
+                    s.classList.remove('expanded');
+                }
+            });
+
+            // Toggle current step
+            if (isExpanded) {
+                step.classList.remove('expanded');
+            } else {
+                step.classList.add('expanded');
+            }
+        }
+
+        // Auto-expand first step on load
+        document.addEventListener('DOMContentLoaded', function () {
+            const firstStep = document.querySelector('.step');
+            if (firstStep) {
+                firstStep.classList.add('expanded');
+            }
+        });
+
+        // VR Functions
+        function enterVR() {
+            if (navigator.xr) {
+                // Try to enter VR if WebXR is supported
+                navigator.xr.isSessionSupported('immersive-vr').then((supported) => {
+                    if (supported) {
+                        // Redirect to VR experience or initialize WebXR
+                        showNotification('🚀 Memulai WebVR...', 'success');
+                        setTimeout(() => {
+                            // Replace with actual VR URL or WebXR initialization
+                            window.open('https://threejs.org/examples/webxr_vr_ballshooter.html', '_blank');
+                        }, 1500);
+                    } else {
+                        showNotification('❌ VR tidak didukung di perangkat ini. Coba gunakan Oculus Browser.', 'error');
+                    }
+                }).catch(() => {
+                    showNotification('⚠️ Tidak dapat mengakses WebXR. Pastikan menggunakan headset VR.', 'warning');
+                });
+            } else {
+                // Fallback for browsers without WebXR
+                showNotification('🌐 Membuka demo WebVR...', 'info');
+                setTimeout(() => {
+                    window.open('https://threejs.org/examples/webxr_vr_ballshooter.html', '_blank');
+                }, 1500);
+            }
+        }
+
+        function startDemo() {
+            showNotification('🎮 Memulai demo WebVR...', 'info');
+            setTimeout(() => {
+                // Open a simple WebVR demo
+                window.open('https://aframe.io/examples/showcase/helloworld/', '_blank');
+            }, 1000);
+        }
+
+        function checkCompatibility() {
+            const statusDiv = document.getElementById('compatibilityStatus');
+            const deviceInfo = document.getElementById('deviceInfo');
+            const webxrSupport = document.getElementById('webxrSupport');
+            const connectionStatus = document.getElementById('connectionStatus');
+
+            // Show status div
+            statusDiv.style.display = 'block';
+
+            // Check device info
+            const userAgent = navigator.userAgent;
+            if (userAgent.includes('OculusBrowser')) {
+                deviceInfo.innerHTML = '<span class="status-supported">Oculus Browser ✓</span>';
+            } else if (userAgent.includes('Mobile')) {
+                deviceInfo.innerHTML = '<span class="status-warning">Mobile Device ⚠️</span>';
+            } else {
+                deviceInfo.innerHTML = '<span class="status-not-supported">Desktop Browser ❌</span>';
+            }
+
+            // Check WebXR support
+            if (navigator.xr) {
+                navigator.xr.isSessionSupported('immersive-vr').then((supported) => {
+                    if (supported) {
+                        webxrSupport.innerHTML = '<span class="status-supported">Didukung ✓</span>';
+                    } else {
+                        webxrSupport.innerHTML = '<span class="status-warning">Terbatas ⚠️</span>';
+                    }
+                }).catch(() => {
+                    webxrSupport.innerHTML = '<span class="status-not-supported">Tidak Didukung ❌</span>';
+                });
+            } else {
+                webxrSupport.innerHTML = '<span class="status-not-supported">Tidak Didukung ❌</span>';
+            }
+
+            // Check connection
+            if (navigator.onLine) {
+                connectionStatus.innerHTML = '<span class="status-supported">Online ✓</span>';
+            } else {
+                connectionStatus.innerHTML = '<span class="status-not-supported">Offline ❌</span>';
+            }
+
+            showNotification('🔍 Pemeriksaan kompatibilitas selesai!', 'success');
+        }
+
+        function showNotification(message, type) {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : type === 'warning' ? '#f59e0b' : '#3b82f6'};
+                color: white;
+                padding: 15px 20px;
+                border-radius: 10px;
+                box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+                z-index: 10000;
+                font-family: inherit;
+                font-weight: 500;
+                transform: translateX(400px);
+                transition: transform 0.3s ease;
+                max-width: 300px;
+            `;
+            notification.textContent = message;
+
+            document.body.appendChild(notification);
+
+            // Animate in
+            setTimeout(() => {
+                notification.style.transform = 'translateX(0)';
+            }, 100);
+
+            // Remove after 4 seconds
+            setTimeout(() => {
+                notification.style.transform = 'translateX(400px)';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 4000);
+        }
+    </script>
+</body>
+
+
+</html>
